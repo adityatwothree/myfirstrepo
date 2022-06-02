@@ -16,22 +16,19 @@ stages:
     pool:
       vmImage: 'vs2017-win2016'
     steps:
-    - task: DotNetCoreCLI@2
-      displayName: Build
+    - task: UseDotNet@2
       inputs:
-        command: 'build'
-        projects: |
-          $(workingDirectory)/*.csproj
-        arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
+        version: '3.0.x'
+    
 
-    - task: ArchiveFiles@2
-      displayName: 'Archive files'
+    - task: DotNetCoreCLI@2
+      displayName: Publish
       inputs:
-        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
-        includeRootFolder: false
-        archiveType: zip
-        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        replaceExistingArchive: true
+        command: publish
+        publishWebProjects: false
+        projects: '$(projectDirectory)\hadar.csproj'
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: true
 
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
@@ -52,5 +49,3 @@ stages:
       inputs:
         testResultsFormat: VSTest
         testResultsFiles: '**/*.trx' 
-    
-    
