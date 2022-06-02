@@ -19,18 +19,7 @@ stages:
     - task: UseDotNet@2
       inputs:
         version: '3.0.x'
-    
-
-    - task: DotNetCoreCLI@2
-      displayName: Publish
-      inputs:
-        command: publish
-        publishWebProjects: false
-        projects: '$(projectDirectory)\hadar.csproj'
-        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        zipAfterPublish: true
-
-
+  
     - task: DotNetCoreInstaller@0
       inputs:
         packageType: 'sdk'
@@ -47,7 +36,16 @@ stages:
       condition: succeededOrFailed()
       inputs:
         testResultsFormat: VSTest
-        testResultsFiles: '**/*.trx' 
+        testResultsFiles: '**/*.trx'
+
+    - task: DotNetCoreCLI@2
+      displayName: Publish
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: '$(projectDirectory)\hadar.csproj'
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: true 
 
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
