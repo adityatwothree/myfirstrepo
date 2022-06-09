@@ -37,15 +37,3 @@ stages:
       inputs:
         testResultsFormat: VSTest
         testResultsFiles: '**/*.trx'
-
-    # - task: DotNetCoreCLI@2
-    #   displayName: Publish
-    #   inputs:
-    #     command: publish
-    #     publishWebProjects: false
-    #     projects: '$(projectDirectory)\hadar.csproj'
-    #     arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    #     zipAfterPublish: true 
-
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-      artifact: drop
